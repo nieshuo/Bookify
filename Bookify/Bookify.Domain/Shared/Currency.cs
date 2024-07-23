@@ -1,4 +1,4 @@
-﻿namespace Bookify.Domain.Apartments
+﻿namespace Bookify.Domain.Shared
 {
     public record Currency
     {
@@ -21,7 +21,7 @@
         }
 
         public static readonly IReadOnlyCollection<Currency> All = new List<Currency>
-        { 
+        {
             Usd,
             Eur,
             Cny,
