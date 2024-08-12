@@ -3,6 +3,7 @@ using Bookify.Application.Abstractions.Messaging;
 using Bookify.Domain.Abstractions;
 using Bookify.Domain.Bookings;
 using Dapper;
+using System.Data;
 
 namespace Bookify.Application.Apartments.SearchApartments
 {
@@ -28,7 +29,9 @@ namespace Bookify.Application.Apartments.SearchApartments
             {
                 return new List<ApartmentResponse>();
             }
-            using var connection = _sqlConnectionFactory.CreateConnection();
+
+            using IDbConnection connection = _sqlConnectionFactory.CreateConnection();
+
             const string sql = """
             SELECT
                 a.id AS Id,

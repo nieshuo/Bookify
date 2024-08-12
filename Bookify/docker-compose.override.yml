@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  bookifydb:
+    container_name: bookifydb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=BookifyDb
+    restart: always
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_bookify:/var/lib/postgresql/data/
+  bookify.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=1236
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ConnectionStrings__Database=Server=bookifydb;Port=5432;Database=BookifyDb;User Id=postgres;Password=postgres;Include Error Detail=true
+    depends_on:
+      - bookifydb
+    ports:
+      - "5000:8080"
+      - "5050:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      # - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ~/.aspnet/https:/https:ro
