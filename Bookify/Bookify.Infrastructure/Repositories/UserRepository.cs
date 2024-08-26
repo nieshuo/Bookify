@@ -8,9 +8,13 @@ namespace Bookify.Infrastructure.Repositories
         {
         }
 
-        public override void Add(User entity)
+        public override void Add(User user)
         {
-            base.Add(entity);
+            foreach (Role role in user.Roles)
+            {
+                DbContext.Attach(role);
+            }
+            base.Add(user);
         }
     }
 }
