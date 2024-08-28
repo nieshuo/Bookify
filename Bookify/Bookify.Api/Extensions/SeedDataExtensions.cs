@@ -45,7 +45,7 @@ namespace Bookify.Api.Extensions
             VALUES(@Id, @Name, @Description, @Country, @State, @ZipCode, @City, @Street, @PriceAmount, @PriceCurrency, @CleaningFeeAmount, @CleaningFeeCurrency, @Amenities, @LastBookedOn);
             """;
 
-            // connection.Execute(sql, apartments);
+            connection.Execute(sql, apartments);
         }
     }
 }

@@ -1,9 +1,14 @@
 using Bookify.Api.Extensions;
 using Bookify.Application;
 using Bookify.Infrastructure;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Host.UseSerilog((context, loggerConfig) =>
+    loggerConfig.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -22,15 +27,26 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 
     app.ApplyMigrations();
+
+    // REMARK: Uncomment if you want to seed initial data.
     app.SeedData();
 }
 
 app.UseHttpsRedirection();
+
+app.UseRequestContextLogging();
+app.UseSerilogRequestLogging();
+
 app.UseCustomExceptionHandler();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHealthChecks("health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.Run();

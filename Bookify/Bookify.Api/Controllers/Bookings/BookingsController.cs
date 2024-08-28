@@ -2,11 +2,13 @@
 using Bookify.Application.Bookings.GetBooking;
 using Bookify.Application.Bookings.ReserveBooking;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bookify.Api.Controllers.Bookings
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class BookingsController : ControllerBase
@@ -25,7 +27,7 @@ namespace Bookify.Api.Controllers.Bookings
 
             var result = await _sender.Send(query, cancellationToken);
 
-            return result.IsSuccess ? Ok(result) : NotFound();
+            return result.IsSuccess ? Ok(result.Value) : NotFound();
         }
 
         [HttpPost("ReserveBooking")]
