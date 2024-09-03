@@ -109,6 +109,21 @@ namespace Bookify.Domain.Bookings
             return Result.Success();
         }
 
+        public Result Complete(DateTime utcNow)
+        {
+            if (Status != BookingStatus.Confirmed)
+            {
+                return Result.Failure(BookingErrors.NotConfirmed);
+            }
+
+            Status = BookingStatus.Completed;
+            CompletedOnUtc = utcNow;
+
+            RaiseDomainEvent(new BookingCompletedDomainEvent(Id));
+
+            return Result.Success();
+        }
+
         public Result Cancel(DateTime utcNow)
         {
             if (Status != BookingStatus.Confirmed)
